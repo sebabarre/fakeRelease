@@ -84,7 +84,7 @@ pipeline {
 		stage("Réactivation de l'intégration continue") {
 			steps {
 				script {
-					jenkinsUtils.enableJobs(jobs: JOBS_CI)
+					jenkinsUtils.enableJobs(jobs: JOBS_CI, pause: 1000)
 				}
 			}
 		}

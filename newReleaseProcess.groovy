@@ -81,7 +81,10 @@ pipeline {
 			}
 		}
 
-		stage("Release") {
+		stage("Release cosmo-kafka-serialization") {
+			when {
+				expression { RELEASE_KAFKA_SER == true }
+			}
 			steps {
 				echo "TODO"
 			}

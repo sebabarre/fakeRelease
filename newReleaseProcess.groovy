@@ -79,6 +79,7 @@ pipeline {
 				}
 			}
 		}
+		//*/
 
 		stage("Réactivation de l'intégration continue") {
 			steps {
@@ -87,6 +88,5 @@ pipeline {
 				}
 			}
 		}
-		//*/
 	}
 }

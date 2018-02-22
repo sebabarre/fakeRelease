@@ -42,6 +42,7 @@ pipeline {
 							RELEASE_KAFKA_SER=true
 						} else {
 							KFK_NEXT_DEV_VERSION="La version de Kafka-Ser dans le dep. mngmt est déjà une release."
+							ALL_REPOS.remove("cosmo-kafka-serialization")
 						}
 
 						//La version working copy d'hesperides est la version en cours

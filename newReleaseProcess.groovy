@@ -37,7 +37,6 @@ pipeline {
 						KFK_NEXT_DEV_VERSION=pomUtils.getArtifactVersionFromDependencyManagement(pom: pom, artifactId: "cosmo-kafka-serialization")
 						if ("${KFK_NEXT_DEV_VERSION}".contains("SNAPSHOT")) {
 							echo "RELEASER KAFKA-SER, TU DOIS"
-							KFK_NEXT_DEV_VERSION=pomUtils.removeSnaphot(version: KFK_NEXT_DEV_VERSION)
 							KFK_NEXT_DEV_VERSION=pomUtils.pumpUpMinorVersionAndResetPatch(version: KFK_NEXT_DEV_VERSION)
 							RELEASE_KAFKA_SER=true
 						} else {

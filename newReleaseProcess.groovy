@@ -70,7 +70,7 @@ pipeline {
 				}
 			}
 		}
-		/*
+		
 		stage("Merge develop -> Master") {
 			steps {
 				script{
@@ -79,7 +79,7 @@ pipeline {
 				}
 			}
 		}
-		//*/
+		
 
 		stage("Réactivation de l'intégration continue") {
 			steps {

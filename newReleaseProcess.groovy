@@ -1,9 +1,11 @@
 @Library('pipelineUtilities@FEATURE/COS-2194') _
 
 
-def group="sebastien_barre"
-def arepo=["houston-connector-pmt"]
-def repos=["houston-connector-pao","houston-connector-emeraude"]+arepo
+def GROUP="sebastien_barre"
+def REPOS_COMPONENT=["houston-connector-emeraude"]
+def ALL_REPOS=["cosmo-kafka-serialization","houston-common","houston-parent"]+REPOS_COMPONENT
+def JOBS_CI=["houston_parent","houston_common","cosmo_kafka_serialization_CI","houston-connector-emeraude"]
+
 
 pipeline {
 	agent any
@@ -22,7 +24,7 @@ pipeline {
 			steps {
 				dir('pomParent') {
 					script {
-						git url: "git@gitlab.socrate.vsct.fr:sebastien_barre/houston-parent.git", branch: "develop"
+						git url: "git@gitlab.socrate.vsct.fr:${GROUP}/houston-parent.git", branch: "develop"
 						def pom = readMavenPom file:'pom.xml'
 
 						//Calcul de la prochaine version de développement
@@ -60,35 +62,31 @@ pipeline {
 				}
 			}
 		}
-		/*
-		stage('Release cosmo-kafka-serialization') {
-			when {
-				expression { RELEASE_KAFKA_SER == true }
-			}
-			steps {
-				echo "RELEASE MOI !!!!!"
-			}
-		}
 
 		stage("Désactivation de l'intégration continue") {
 			steps {
 				script {
-					def JOBS_CI=["deploy_pom_parent","houston_common_CI","cosmo_kafka_serialization_CI","houston-back-office","houston-connector-emeraude","houston-connector-pao","houston-connector-pmt","houston-event-stream-api","cosmo_kafka_cli_CI","houston-connector-intermed","MR_inspektor_Houston","MR_inspektor_Houston_Scala","MR_inspektor_libs"]
 					jenkinsUtils.disableJobs(jobs: JOBS_CI)
 				}
 			}
 		}
-
-		stage("Test merge") {
+		/*
+		stage("Merge develop -> Master") {
 			steps {
 				script{
-					gitUtils.mergeAllProjects(	group: group,
-												repositories: repos,
-												branchFrom: "develop",
-												branchTo: "master")
-					gitUtils.pushAllModifications(group: group, repositories: repos, branch: "master")
+					gitUtils.mergeAllProjects(group: GROUP, repositories: ALL_REPOS, branchFrom: "develop", branchTo: "master")
+					gitUtils.pushAllModifications(group: GROUP, repositories: ALL_REPOS, branch: "master")
 				}
 			}
-		}*/
+		}
+
+		stage("Réactivation de l'intégration continue") {
+			steps {
+				script {
+					jenkinsUtils.disableJobs(jobs: JOBS_CI)
+				}
+			}
+		}
+		//*/
 	}
 }

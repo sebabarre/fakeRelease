@@ -85,7 +85,9 @@ pipeline {
 				expression { RELEASE_KAFKA_SER == true }
 			}
 			steps {
-				releaseUtils.releaseThisProject(group: GROUP, repository:"cosmo-kafka-serialization", nextVersion:KFK_NEXT_DEV_VERSION)
+				script {
+					releaseUtils.releaseThisProject(group: GROUP, repository:"cosmo-kafka-serialization", nextVersion:KFK_NEXT_DEV_VERSION)
+				}
 			}
 		}
 

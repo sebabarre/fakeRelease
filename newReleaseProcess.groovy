@@ -4,7 +4,7 @@
 def GROUP="sebastien_barre"
 def REPOS_COMPONENT=["houston-connector-emeraude"]
 def ALL_REPOS=["cosmo-kafka-serialization","houston-common","houston-parent"]+REPOS_COMPONENT
-def JOBS_CI=["houston_parent","houston_common","cosmo_kafka_serialization_CI","houston-connector-emeraude"]
+def JOBS_CI=["houston-parent","houston-common","cosmo_kafka_serialization_CI","houston-connector-emeraude"]
 
 
 pipeline {

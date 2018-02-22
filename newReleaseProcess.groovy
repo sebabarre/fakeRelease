@@ -60,7 +60,7 @@ pipeline {
 				}
 			}
 		}
-
+		/*
 		stage('Release cosmo-kafka-serialization') {
 			when {
 				expression { RELEASE_KAFKA_SER == true }

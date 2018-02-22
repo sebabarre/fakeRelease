@@ -52,10 +52,10 @@ pipeline {
 							id: "releaseParams",
 							message: "Merci de vérifier les paramètres générés !",
 							parameters: [
-								string(name: "KFK_NEXT_DEV_VERSION", defaultValue: "${KFK_NEXT_DEV_VERSION}", description: "Numéro de la prochaine version de dev de la librairie cosmo-kafka-serialization\nCe champ doit respecter le pattern ((\\d{1,2}\\.\\d{1,2}\\.\\d{1,2}-SNAPSHOT)|^\$)"),
-								string(name: "HOUSTON_RELEASE_VERSION", defaultValue: "${HOUSTON_RELEASE_VERSION}",description: "Numéro de version des différents composants de Houston.\nCe numéro doit respecter le pattern \\d{1,2}\\.\\d{1,2}\\.\\d{1,2}"),
-								string(name: "HOUSTON_NEXT_DEV_VERSION", defaultValue: "${HOUSTON_NEXT_DEV_VERSION}", description: "Numéro de la prochaine version de dev des différents composants de Houston\nCe numéro doit respecter le pattern \\d{1,2}\\.\\d{1,2}\\.\\d{1,2}-SNAPSHOT"),
-								string(name: "HESPERIDES_WORKING_COPY_VERSION", defaultValue: "${HESPERIDES_WORKING_COPY_VERSION}", description: "Version de la WorkingCopy Hesperides d'où sera tiré la Release\nCe numéro doit respecter le pattern \\d{1,2}\\.\\d{1,2}\\.\\d{1,2}(-SNAPSHOT)?")
+								string(name: "KFK_NEXT_DEV_VERSION", defaultValue: "${KFK_NEXT_DEV_VERSION}", description: "Numéro de la prochaine version de dev de la librairie cosmo-kafka-serialization"),
+								string(name: "HOUSTON_RELEASE_VERSION", defaultValue: "${HOUSTON_RELEASE_VERSION}",description: "Numéro de version des différents composants de Houston."),
+								string(name: "HOUSTON_NEXT_DEV_VERSION", defaultValue: "${HOUSTON_NEXT_DEV_VERSION}", description: "Numéro de la prochaine version de dev des différents composants de Houston"),
+								string(name: "HESPERIDES_WORKING_COPY_VERSION", defaultValue: "${HESPERIDES_WORKING_COPY_VERSION}", description: "Version de la WorkingCopy Hesperides d'où sera tiré la Release")
 							]
 						)
 					}
@@ -85,7 +85,7 @@ pipeline {
 				expression { RELEASE_KAFKA_SER == true }
 			}
 			steps {
-				echo "TODO"
+				releaseUtils.releaseThisProject(group: GROUP, repository:"cosmo-kafka-serialization", nextVersion:KFK_NEXT_DEV_VERSION)
 			}
 		}
 

@@ -18,11 +18,11 @@ pipeline {
 		RELEASE_KAFKA_SER=false
 	}
 	stages {
-		/*stage('Validation des versions') {
+		stage('Validation des versions') {
 			steps {
 				dir('pomParent') {
 					script {
-						git url: "git@gitlab.socrate.vsct.fr:sebastien_barre/houston-parent.git", branch: "master"
+						git url: "git@gitlab.socrate.vsct.fr:sebastien_barre/houston-parent.git", branch: "develop"
 						def pom = readMavenPom file:'pom.xml'
 
 						//Calcul de la prochaine version de développement
@@ -77,7 +77,7 @@ pipeline {
 					jenkinsUtils.disableJobs(jobs: JOBS_CI)
 				}
 			}
-		}*/
+		}
 
 		stage("Test merge") {
 			steps {
@@ -89,6 +89,6 @@ pipeline {
 					gitUtils.pushAllModifications(group: group, repositories: repos, branch: "master")
 				}
 			}
-		}
+		}*/
 	}
 }

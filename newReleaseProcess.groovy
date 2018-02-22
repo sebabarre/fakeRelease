@@ -75,7 +75,22 @@ pipeline {
 			steps {
 				script{
 					gitUtils.mergeAllProjects(group: GROUP, repositories: ALL_REPOS, branchFrom: "develop", branchTo: "master")
-					gitUtils.pushAllModifications(group: GROUP, repositories: ALL_REPOS, branch: "master")
+					//gitUtils.pushAllModifications(group: GROUP, repositories: ALL_REPOS, branch: "master")
+				}
+			}
+		}
+
+		stage("Release") {
+			steps {
+				echo "TODO"
+			}
+		}
+
+		stage("Merge Master -> Develop") {
+			steps {
+				script{
+					gitUtils.mergeAllProjects(group: GROUP, repositories: ALL_REPOS, branchFrom: "master", branchTo: "develop")
+					//gitUtils.pushAllModifications(group: GROUP, repositories: ALL_REPOS, branch: "develop")
 				}
 			}
 		}
@@ -88,5 +103,7 @@ pipeline {
 				}
 			}
 		}
+
+
 	}
 }

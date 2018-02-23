@@ -86,7 +86,7 @@ pipeline {
 			}
 			steps {
 				script {
-					releaseUtils.releaseThisProject(group: GROUP, repository:"cosmo-kafka-serialization", nextVersion:KFK_NEXT_DEV_VERSION)
+					releaseUtils.releaseThisProjectInDryRun(group: GROUP, repository:"cosmo-kafka-serialization", nextVersion:KFK_NEXT_DEV_VERSION)
 				}
 			}
 		}

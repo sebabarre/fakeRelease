@@ -55,7 +55,8 @@ pipeline {
 								string(name: "KFK_NEXT_DEV_VERSION", defaultValue: "${KFK_NEXT_DEV_VERSION}", description: "Numéro de la prochaine version de dev de la librairie cosmo-kafka-serialization"),
 								string(name: "HOUSTON_RELEASE_VERSION", defaultValue: "${HOUSTON_RELEASE_VERSION}",description: "Numéro de version des différents composants de Houston."),
 								string(name: "HOUSTON_NEXT_DEV_VERSION", defaultValue: "${HOUSTON_NEXT_DEV_VERSION}", description: "Numéro de la prochaine version de dev des différents composants de Houston"),
-								string(name: "HESPERIDES_WORKING_COPY_VERSION", defaultValue: "${HESPERIDES_WORKING_COPY_VERSION}", description: "Version de la WorkingCopy Hesperides d'où sera tiré la Release")
+								string(name: "HESPERIDES_WORKING_COPY_VERSION", defaultValue: "${HESPERIDES_WORKING_COPY_VERSION}", description: "Version de la WorkingCopy Hesperides d'où sera tiré la Release"),
+								booleanParam(name: "IS_DRY_RUN", defaultValue: true, description: "Mode dry run, c'est à dire que tout est fait en local, pour test")
 							]
 						)
 					}
@@ -86,7 +87,7 @@ pipeline {
 			}
 			steps {
 				script {
-					releaseUtils.releaseThisProjectInDryRun(group: GROUP, repository:"cosmo-kafka-serialization", nextVersion:KFK_NEXT_DEV_VERSION)
+					releaseUtils.releaseThisProject(group: GROUP, repository:"cosmo-kafka-serialization", nextVersion:parameters.KFK_NEXT_DEV_VERSION, isDryRun: parameters.IS_DRY_RUN)
 				}
 			}
 		}

@@ -87,11 +87,12 @@ pipeline {
 			}
 			steps {
 				script {
-					releaseUtils.releaseThisProject(group: GROUP, repository:"cosmo-kafka-serialization", nextVersion: params.KFK_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
+					def versionRelease = releaseUtils.releaseThisProject(group: GROUP, repository:"cosmo-kafka-serialization", nextVersion: params.KFK_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
+					pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"cosmo-kafka-serialization", version: versionRelease)
 				}
 			}
 		}
-		/*
+		
 		stage("Merge Master -> Develop") {
 			steps {
 				script{
@@ -100,7 +101,6 @@ pipeline {
 				}
 			}
 		}
-		
 
 		stage("Réactivation de l'intégration continue") {
 			steps {
@@ -109,7 +109,5 @@ pipeline {
 				}
 			}
 		}
-		//*/
-
 	}
 }

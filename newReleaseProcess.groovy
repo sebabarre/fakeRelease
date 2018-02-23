@@ -90,7 +90,7 @@ pipeline {
 				}
 			}
 		}
-
+		/*
 		stage("Merge Master -> Develop") {
 			steps {
 				script{
@@ -108,7 +108,7 @@ pipeline {
 				}
 			}
 		}
-
+		//*/
 
 	}
 }

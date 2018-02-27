@@ -76,7 +76,9 @@ pipeline {
 			steps {
 				script{
 					gitUtils.mergeAllProjects(group: GROUP, repositories: ALL_REPOS, branchFrom: "develop", branchTo: "master")
-					gitUtils.pushAllModifications(group: GROUP, repositories: ALL_REPOS, branch: "master")
+					if (!params.IS_DRY_RUN) {
+						gitUtils.pushAllModifications(group: GROUP, repositories: ALL_REPOS, branch: "master")
+					}
 				}
 			}
 		}
@@ -97,7 +99,9 @@ pipeline {
 			steps {
 				script{
 					gitUtils.mergeAllProjects(group: GROUP, repositories: ALL_REPOS, branchFrom: "master", branchTo: "develop")
-					gitUtils.pushAllModifications(group: GROUP, repositories: ALL_REPOS, branch: "develop")
+					if (!params.IS_DRY_RUN) {
+						gitUtils.pushAllModifications(group: GROUP, repositories: ALL_REPOS, branch: "develop")
+					}
 				}
 			}
 		}

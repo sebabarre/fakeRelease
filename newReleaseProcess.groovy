@@ -2,7 +2,7 @@
 
 
 def GROUP="sebastien_barre"
-def REPOS_COMPONENT=["houston-connector-emeraude"]
+def REPOS_COMPONENT=["houston-connector-emeraude","houston-connector-pao"]
 def ALL_REPOS=["cosmo-kafka-serialization","houston-common","houston-parent"]+REPOS_COMPONENT
 def JOBS_CI=["houston-parent","houston-common","cosmo_kafka_serialization_CI","houston-connector-emeraude"]
 
@@ -95,13 +95,40 @@ pipeline {
 			}
 		}
 
+
+		stage("Release houston-common") {
+			steps {
+				script {
+					releaseUtils.releaseThisProject(group: GROUP, repository:"houston-common", nextVersion: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
+				}
+			}
+		}
+
 		stage("Mise à jour du dependency management") {
 			steps {
 				script {
 					pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"cosmo-kafka-serialization", version: KFK_RELEASE_VERSION, isDryRun: params.IS_DRY_RUN)
+					pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"houston-common", version: HOUSTON_RELEASE_VERSION, isDryRun: params.IS_DRY_RUN)
+
 					if (!params.IS_DRY_RUN) {
 						gitUtils.pushAllModifications(group: GROUP, repositories: ["houston-parent"], branch: "master")
 					}
+				}
+			}
+		}
+
+		stage("Release houston-parent") {
+			steps {
+				script {
+					releaseUtils.releaseThisProject(group: GROUP, repository:"houston-parent", nextVersion: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
+				}
+			}
+		}
+
+		stage("Release component") {
+			steps {
+				script {
+					releaseUtils.releaseThoseProjectsInParallel(group: GROUP, repositories:REPOS_COMPONENT, , nextVersion: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
 				}
 			}
 		}

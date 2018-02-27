@@ -90,7 +90,17 @@ pipeline {
 			steps {
 				script {
 					def versionRelease = releaseUtils.releaseThisProject(group: GROUP, repository:"cosmo-kafka-serialization", nextVersion: params.KFK_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
+				}
+			}
+		}
+
+		stage("Mise à jour du dependency management") {
+			steps {
+				script {
 					pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"cosmo-kafka-serialization", version: versionRelease, isDryRun: params.IS_DRY_RUN)
+					if (!params.IS_DRY_RUN) {
+						gitUtils.pushAllModifications(group: GROUP, repositories: ["houston-parent"], branch: "master")
+					}
 				}
 			}
 		}

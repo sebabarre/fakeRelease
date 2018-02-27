@@ -96,18 +96,12 @@ pipeline {
 		}
 
 
-		stage("Release houston-common") {
-			steps {
-				script {
-					releaseUtils.releaseThisProject(group: GROUP, repository:"houston-common", nextVersion: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
-				}
-			}
-		}
-
 		stage("Mise à jour du dependency management") {
 			steps {
 				script {
-					pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"cosmo-kafka-serialization", version: KFK_RELEASE_VERSION, isDryRun: params.IS_DRY_RUN)
+					if (RELEASE_KAFKA_SER) {
+						pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"cosmo-kafka-serialization", version: KFK_RELEASE_VERSION, isDryRun: params.IS_DRY_RUN)
+					}
 					pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"houston-common", version: HOUSTON_RELEASE_VERSION, isDryRun: params.IS_DRY_RUN)
 
 					if (!params.IS_DRY_RUN) {
@@ -124,6 +118,16 @@ pipeline {
 				}
 			}
 		}
+
+
+		stage("Release houston-common") {
+			steps {
+				script {
+					releaseUtils.releaseThisProject(group: GROUP, repository:"houston-common", nextVersion: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
+				}
+			}
+		}
+
 
 		stage("Release component") {
 			steps {

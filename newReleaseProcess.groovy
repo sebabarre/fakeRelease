@@ -75,7 +75,7 @@ pipeline {
 		stage("Merge develop -> Master") {
 			steps {
 				script{
-					gitUtils.mergeAllProjects(group: GROUP, repositories: ALL_REPOS, branchFrom: "develop", branchTo: "master", cleanWorkspace: !params.IS_DRY_RUN)
+					gitUtils.mergeAllProjects(group: GROUP, repositories: ALL_REPOS, branchFrom: "develop", branchTo: "master")
 					if (!params.IS_DRY_RUN) {
 						gitUtils.pushAllModifications(group: GROUP, repositories: ALL_REPOS, branch: "master")
 					}
@@ -98,7 +98,7 @@ pipeline {
 		stage("Merge Master -> Develop") {
 			steps {
 				script{
-					gitUtils.mergeAllProjects(group: GROUP, repositories: ALL_REPOS, branchFrom: "master", branchTo: "develop")
+					gitUtils.mergeAllProjects(group: GROUP, repositories: ALL_REPOS, branchFrom: "master", branchTo: "develop", cleanWorkspace: !params.IS_DRY_RUN)
 					if (!params.IS_DRY_RUN) {
 						gitUtils.pushAllModifications(group: GROUP, repositories: ALL_REPOS, branch: "develop")
 					}

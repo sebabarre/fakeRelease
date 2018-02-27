@@ -75,7 +75,7 @@ pipeline {
 		stage("Merge develop -> Master") {
 			steps {
 				script{
-					gitUtils.mergeAllProjects(group: GROUP, repositories: ALL_REPOS, branchFrom: "develop", branchTo: "master")
+					gitUtils.mergeAllProjects(group: GROUP, repositories: ALL_REPOS, branchFrom: "develop", branchTo: "master", cleanWorkspace: !params.IS_DRY_RUN)
 					if (!params.IS_DRY_RUN) {
 						gitUtils.pushAllModifications(group: GROUP, repositories: ALL_REPOS, branch: "master")
 					}

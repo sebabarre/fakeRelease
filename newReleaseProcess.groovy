@@ -130,8 +130,7 @@ pipeline {
 		stage("Release component") {
 			steps {
 				script {
-					sh "mvn -version"
-					releaseUtils.releaseThoseProjectsInParallel(group: GROUP, repository:REPOS_COMPONENT, nextVersion: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
+					releaseUtils.releaseThoseProjectsInParallel(group: GROUP, repositories:REPOS_COMPONENT, nextVersion: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
 				}
 			}
 		}

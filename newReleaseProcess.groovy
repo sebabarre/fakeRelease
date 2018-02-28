@@ -99,7 +99,7 @@ pipeline {
 		stage("Mise à jour du dependency management") {
 			steps {
 				script {
-					if (RELEASE_KAFKA_SER) {
+					if (RELEASE_KAFKA_SER == true) {
 						pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"cosmo-kafka-serialization", version: KFK_RELEASE_VERSION, isDryRun: params.IS_DRY_RUN)
 					}
 					pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"houston-common", version: HOUSTON_RELEASE_VERSION, isDryRun: params.IS_DRY_RUN)

@@ -2,7 +2,7 @@
 
 
 def GROUP="sebastien_barre"
-def REPOS_COMPONENT=["houston-connector-emeraude","houston-connector-pao"]
+def REPOS_COMPONENT=["houston-connector-pmt","houston-connector-pao"]
 def ALL_REPOS=["cosmo-kafka-serialization","houston-common","houston-parent"]+REPOS_COMPONENT
 def JOBS_CI=["houston-parent","houston-common","cosmo_kafka_serialization_CI","houston-connector-emeraude"]
 
@@ -132,7 +132,8 @@ pipeline {
 		stage("Release component") {
 			steps {
 				script {
-					releaseUtils.releaseThisProject(group: GROUP, repository:"houston-connector-emeraude", nextVersion: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
+					sh "mvn -version"
+					releaseUtils.releaseThisProject(group: GROUP, repository:"houston-connector-pmt", nextVersion: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
 				}
 			}
 		}

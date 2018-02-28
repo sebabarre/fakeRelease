@@ -96,7 +96,7 @@ pipeline {
 		}
 
 
-		stage("Mise à jour du dependency management") {
+		stage("Mise à jour du dependency managemen - release") {
 			steps {
 				script {
 					if (RELEASE_KAFKA_SER == true) {
@@ -136,7 +136,7 @@ pipeline {
 			}
 		}
 
-		stage("Mise à jour du dependency management") {
+		stage("Mise à jour du dependency management - snapshot") {
 			steps {
 				script {
 					pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"houston-common", version: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)

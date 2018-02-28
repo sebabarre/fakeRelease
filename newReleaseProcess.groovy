@@ -96,13 +96,13 @@ pipeline {
 		}
 
 
-		stage("Mise à jour du dependency managemen - release") {
+		stage("Mise à jour du dependency management - release") {
 			steps {
 				script {
 					if (RELEASE_KAFKA_SER == true) {
 						pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"cosmo-kafka-serialization", version: KFK_RELEASE_VERSION, isDryRun: params.IS_DRY_RUN)
 					}
-					pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"houston-common", version: HOUSTON_RELEASE_VERSION, isDryRun: params.IS_DRY_RUN)
+					pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"houston-common", version: params.HOUSTON_RELEASE_VERSION, isDryRun: params.IS_DRY_RUN)
 
 					if (!params.IS_DRY_RUN) {
 						gitUtils.pushAllModifications(group: GROUP, repositories: ["houston-parent"], branch: "master")
@@ -131,7 +131,7 @@ pipeline {
 			steps {
 				script {
 					sh "mvn -version"
-					releaseUtils.releaseThisProject(group: GROUP, repository:"houston-connector-pao", nextVersion: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
+					releaseUtils.releaseThoseProjectsInParallel(group: GROUP, repository:REPOS_COMPONENT, nextVersion: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
 				}
 			}
 		}

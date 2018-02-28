@@ -133,7 +133,7 @@ pipeline {
 			steps {
 				script {
 					sh "mvn -version"
-					releaseUtils.releaseThisProject(group: GROUP, repository:"houston-connector-pmt", nextVersion: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
+					releaseUtils.releaseThisProject(group: GROUP, repository:"houston-connector-pao", nextVersion: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
 				}
 			}
 		}

@@ -119,7 +119,6 @@ pipeline {
 			}
 		}
 
-		/*
 		stage("Release houston-common") {
 			steps {
 				script {
@@ -127,13 +126,24 @@ pipeline {
 				}
 			}
 		}
-		//*/
 
 		stage("Release component") {
 			steps {
 				script {
 					sh "mvn -version"
 					releaseUtils.releaseThisProject(group: GROUP, repository:"houston-connector-pao", nextVersion: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
+				}
+			}
+		}
+
+		stage("Mise à jour du dependency management") {
+			steps {
+				script {
+					pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"houston-common", version: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
+
+					if (!params.IS_DRY_RUN) {
+						gitUtils.pushAllModifications(group: GROUP, repositories: ["houston-parent"], branch: "master")
+					}
 				}
 			}
 		}

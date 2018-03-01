@@ -1,7 +1,9 @@
 @Library('pipelineUtilities@FEATURE/COS-2194') _
 
 def doRollback() {
+	echo "ENTER ROLLBACK"
 	if (!params.IS_DRY_RUN) {
+		echo "IN DA ROLLBACK"
 		pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"houston-common", version: HOUSTON_CURRENT_VERSION, isDryRun: params.IS_DRY_RUN)
 		jenkinsUtils.rollbackThoseProjects(group: GROUP, repositories:ROLLBACK_PROJECTS, lastVersion: HOUSTON_CURRENT_VERSION)
 		if (RELEASE_KAFKA_SER == true) {
@@ -150,6 +152,7 @@ pipeline {
 			post {
 				failure {
 					script {
+						echo "IN DA FAILURE"
 						doRollback()
 					}
 				}

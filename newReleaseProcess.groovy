@@ -19,6 +19,7 @@ pipeline {
 		HESPERIDES_WORKING_COPY_VERSION=""
 		RELEASE_KAFKA_SER=false
 		KFK_RELEASE_VERSION=""
+		HOUSTON_CURRENT_VERSION=""
 	}
 	stages {
 		stage('Validation des versions') {
@@ -27,12 +28,12 @@ pipeline {
 					script {
 						git url: "git@gitlab.socrate.vsct.fr:${GROUP}/houston-parent.git", branch: "develop"
 						def pom = readMavenPom file:'pom.xml'
-
+						HOUSTON_CURRENT_VERSION=pom.getVersion()
 						//Calcul de la prochaine version de développement
-						HOUSTON_NEXT_DEV_VERSION=pomUtils.pumpUpMinorVersionAndResetPatch(version: pom.getVersion())
+						HOUSTON_NEXT_DEV_VERSION=pomUtils.pumpUpMinorVersionAndResetPatch(version: HOUSTON_CURRENT_VERSION)
 
 						//Calcul de la prochaine version releasé
-						HOUSTON_RELEASE_VERSION=pomUtils.removeSnaphot(version: pom.getVersion())
+						HOUSTON_RELEASE_VERSION=pomUtils.removeSnaphot(version: HOUSTON_CURRENT_VERSION)
 
 						//Calcul de la prochaine version de cosmo-kafkaser
 						KFK_CURRENT_VERSION=pomUtils.getArtifactVersionFromDependencyManagement(pom: pom, artifactId: "cosmo-kafka-serialization")
@@ -46,7 +47,7 @@ pipeline {
 						}
 
 						//La version working copy d'hesperides est la version en cours
-						HESPERIDES_WORKING_COPY_VERSION=pom.getVersion()
+						HESPERIDES_WORKING_COPY_VERSION=HOUSTON_CURRENT_VERSION
 
 						//Validation des paramètres
 						params = input(
@@ -112,9 +113,14 @@ pipeline {
 						pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"cosmo-kafka-serialization", version: KFK_RELEASE_VERSION, isDryRun: params.IS_DRY_RUN)
 					}
 					pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"houston-common", version: params.HOUSTON_RELEASE_VERSION, isDryRun: params.IS_DRY_RUN)
-
-					if (!params.IS_DRY_RUN) {
-						gitUtils.pushAllModifications(group: GROUP, repositories: ["houston-parent"], branch: "master")
+				}
+			}
+			post {
+				failure {
+					script {
+						if (!params.IS_DRY_RUN) {
+							pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"houston-common", version: HOUSTON_CURRENT_VERSION, isDryRun: params.IS_DRY_RUN)
+						}
 					}
 				}
 			}
@@ -124,6 +130,16 @@ pipeline {
 			steps {
 				script {
 					releaseUtils.releaseThisProject(group: GROUP, repository:"houston-parent", nextVersion: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
+				}
+			}
+			post {
+				failure {
+					script {
+						if (!params.IS_DRY_RUN) {
+							pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"houston-common", version: HOUSTON_CURRENT_VERSION, isDryRun: params.IS_DRY_RUN)
+							jenkinsUtils.rollbackThisProject(group: GROUP, repository:"houston-parent", lastVersion: HOUSTON_CURRENT_VERSION)
+						}
+					}
 				}
 			}
 		}

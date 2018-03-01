@@ -35,10 +35,10 @@ pipeline {
 						HOUSTON_RELEASE_VERSION=pomUtils.removeSnaphot(version: pom.getVersion())
 
 						//Calcul de la prochaine version de cosmo-kafkaser
-						KFK_NEXT_DEV_VERSION=pomUtils.getArtifactVersionFromDependencyManagement(pom: pom, artifactId: "cosmo-kafka-serialization")
+						KFK_CURRENT_VERSION=pomUtils.getArtifactVersionFromDependencyManagement(pom: pom, artifactId: "cosmo-kafka-serialization")
 						if ("${KFK_NEXT_DEV_VERSION}".contains("SNAPSHOT")) {
 							echo "RELEASER KAFKA-SER, TU DOIS"
-							KFK_NEXT_DEV_VERSION=pomUtils.pumpUpMinorVersionAndResetPatch(version: KFK_NEXT_DEV_VERSION)
+							KFK_NEXT_DEV_VERSION=pomUtils.pumpUpMinorVersionAndResetPatch(version: KFK_CURRENT_VERSION)
 							RELEASE_KAFKA_SER=true
 						} else {
 							KFK_NEXT_DEV_VERSION="La version de Kafka-Ser dans le dep. mngmt est déjà une release."
@@ -91,6 +91,13 @@ pipeline {
 			steps {
 				script {
 					KFK_RELEASE_VERSION = releaseUtils.releaseThisProject(group: GROUP, repository:"cosmo-kafka-serialization", nextVersion: params.KFK_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
+				}
+			}
+			post {
+				failure {
+					if (!params.IS_DRY_RUN) {
+						jenkinsUtils.rollbackThisProject(group: GROUP, repository:"cosmo-kafka-serialization", lastVersion: KFK_CURRENT_VERSION)
+					}
 				}
 			}
 		}

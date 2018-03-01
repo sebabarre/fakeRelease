@@ -14,6 +14,7 @@ def GROUP="sebastien_barre"
 def REPOS_COMPONENT=["houston-connector-pmt","houston-connector-pao"]
 def ALL_REPOS=["cosmo-kafka-serialization","houston-common","houston-parent"]+REPOS_COMPONENT
 def JOBS_CI=["houston-parent","houston-common","cosmo_kafka_serialization_CI","houston-connector-emeraude"]
+def ROLLBACK_PROJECTS=[]
 
 pipeline {
 	agent any
@@ -28,7 +29,6 @@ pipeline {
 		RELEASE_KAFKA_SER=false
 		KFK_RELEASE_VERSION=""
 		HOUSTON_CURRENT_VERSION=""
-		ROLLBACK_PROJECTS=[]
 	}
 	stages {
 		stage('Validation des versions') {

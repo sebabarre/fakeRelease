@@ -6,7 +6,6 @@ def REPOS_COMPONENT=["houston-connector-pmt","houston-connector-pao"]
 def ALL_REPOS=["cosmo-kafka-serialization","houston-common","houston-parent"]+REPOS_COMPONENT
 def JOBS_CI=["houston-parent","houston-common","cosmo_kafka_serialization_CI","houston-connector-emeraude"]
 
-
 pipeline {
 	agent any
 	tools {
@@ -148,6 +147,16 @@ pipeline {
 			steps {
 				script {
 					releaseUtils.releaseThisProject(group: GROUP, repository:"houston-common", nextVersion: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
+				}
+			}
+			post {
+				failure {
+					script {
+						if (!params.IS_DRY_RUN) {
+							pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"houston-common", version: HOUSTON_CURRENT_VERSION, isDryRun: params.IS_DRY_RUN)
+							jenkinsUtils.rollbackThoseProjects(group: GROUP, repositories:["houston-parent","houston-common"], lastVersion: HOUSTON_CURRENT_VERSION)
+						}
+					}
 				}
 			}
 		}

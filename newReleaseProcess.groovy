@@ -95,8 +95,10 @@ pipeline {
 			}
 			post {
 				failure {
-					if (!params.IS_DRY_RUN) {
-						jenkinsUtils.rollbackThisProject(group: GROUP, repository:"cosmo-kafka-serialization", lastVersion: KFK_CURRENT_VERSION)
+					script {
+						if (!params.IS_DRY_RUN) {
+							jenkinsUtils.rollbackThisProject(group: GROUP, repository:"cosmo-kafka-serialization", lastVersion: KFK_CURRENT_VERSION)
+						}
 					}
 				}
 			}

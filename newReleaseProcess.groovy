@@ -1,5 +1,14 @@
 @Library('pipelineUtilities@FEATURE/COS-2194') _
 
+def doRollback() {
+	if (!params.IS_DRY_RUN) {
+		pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"houston-common", version: HOUSTON_CURRENT_VERSION, isDryRun: params.IS_DRY_RUN)
+		jenkinsUtils.rollbackThoseProjects(group: GROUP, repositories:ROLLBACK_PROJECTS, lastVersion: HOUSTON_CURRENT_VERSION)
+		if (RELEASE_KAFKA_SER == true) {
+			pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"cosmo-kafka-serialization", version: KFK_CURRENT_VERSION, isDryRun: params.IS_DRY_RUN)
+		}
+	}
+}
 
 def GROUP="sebastien_barre"
 def REPOS_COMPONENT=["houston-connector-pmt","houston-connector-pao"]
@@ -19,6 +28,7 @@ pipeline {
 		RELEASE_KAFKA_SER=false
 		KFK_RELEASE_VERSION=""
 		HOUSTON_CURRENT_VERSION=""
+		ROLLBACK_PROJECTS=[]
 	}
 	stages {
 		stage('Validation des versions') {
@@ -90,6 +100,7 @@ pipeline {
 			}
 			steps {
 				script {
+					ROLLBACK_PROJECTS.push("cosmo-kafka-serialization")
 					KFK_RELEASE_VERSION = releaseUtils.releaseThisProject(group: GROUP, repository:"cosmo-kafka-serialization", nextVersion: params.KFK_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
 				}
 			}
@@ -119,6 +130,10 @@ pipeline {
 					script {
 						if (!params.IS_DRY_RUN) {
 							pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"houston-common", version: HOUSTON_CURRENT_VERSION, isDryRun: params.IS_DRY_RUN)
+							if (RELEASE_KAFKA_SER == true) {
+								pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"cosmo-kafka-serialization", version: KFK_CURRENT_VERSION, isDryRun: params.IS_DRY_RUN)
+								jenkinsUtils.rollbackThisProject(group: GROUP, repository:"cosmo-kafka-serialization", lastVersion: KFK_CURRENT_VERSION)
+							}
 						}
 					}
 				}
@@ -128,16 +143,14 @@ pipeline {
 		stage("Release houston-parent") {
 			steps {
 				script {
+					ROLLBACK_PROJECTS.push("houston-parent")
 					releaseUtils.releaseThisProject(group: GROUP, repository:"houston-parent", nextVersion: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
 				}
 			}
 			post {
 				failure {
 					script {
-						if (!params.IS_DRY_RUN) {
-							pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"houston-common", version: HOUSTON_CURRENT_VERSION, isDryRun: params.IS_DRY_RUN)
-							jenkinsUtils.rollbackThisProject(group: GROUP, repository:"houston-parent", lastVersion: HOUSTON_CURRENT_VERSION)
-						}
+						doRollback()
 					}
 				}
 			}
@@ -146,16 +159,14 @@ pipeline {
 		stage("Release houston-common") {
 			steps {
 				script {
+					ROLLBACK_PROJECTS.push("houston-common")
 					releaseUtils.releaseThisProject(group: GROUP, repository:"houston-common", nextVersion: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
 				}
 			}
 			post {
 				failure {
 					script {
-						if (!params.IS_DRY_RUN) {
-							pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"houston-common", version: HOUSTON_CURRENT_VERSION, isDryRun: params.IS_DRY_RUN)
-							jenkinsUtils.rollbackThoseProjects(group: GROUP, repositories:["houston-parent","houston-common"], lastVersion: HOUSTON_CURRENT_VERSION)
-						}
+						doRollback()
 					}
 				}
 			}
@@ -164,7 +175,15 @@ pipeline {
 		stage("Release component") {
 			steps {
 				script {
+					ROLLBACK_PROJECTS+=REPOS_COMPONENT
 					releaseUtils.releaseThoseProjectsInParallel(group: GROUP, repositories:REPOS_COMPONENT, nextVersion: params.HOUSTON_NEXT_DEV_VERSION, isDryRun: params.IS_DRY_RUN)
+				}
+			}
+			post {
+				failure {
+					script {
+						doRollback()
+					}
 				}
 			}
 		}

@@ -1,10 +1,10 @@
 @Library('pipelineUtilities@FEATURE/COS-2194') _
 
-def GROUP="sebastien_barre"
+GROUP="sebastien_barre"
 def REPOS_COMPONENT=["houston-connector-pmt","houston-connector-pao"]
 def ALL_REPOS=["cosmo-kafka-serialization","houston-common","houston-parent"]+REPOS_COMPONENT
 def JOBS_CI=["houston-parent","houston-common","cosmo_kafka_serialization_CI","houston-connector-emeraude"]
-def ROLLBACK_PROJECTS=[]
+ROLLBACK_PROJECTS=[]
 
 def doRollback() {
 	echo "ENTER ROLLBACK"

@@ -1,5 +1,11 @@
 @Library('pipelineUtilities@FEATURE/COS-2194') _
 
+def GROUP="sebastien_barre"
+def REPOS_COMPONENT=["houston-connector-pmt","houston-connector-pao"]
+def ALL_REPOS=["cosmo-kafka-serialization","houston-common","houston-parent"]+REPOS_COMPONENT
+def JOBS_CI=["houston-parent","houston-common","cosmo_kafka_serialization_CI","houston-connector-emeraude"]
+def ROLLBACK_PROJECTS=[]
+
 def doRollback() {
 	echo "ENTER ROLLBACK"
 	if (!params.IS_DRY_RUN) {
@@ -11,12 +17,6 @@ def doRollback() {
 		}
 	}
 }
-
-def GROUP="sebastien_barre"
-def REPOS_COMPONENT=["houston-connector-pmt","houston-connector-pao"]
-def ALL_REPOS=["cosmo-kafka-serialization","houston-common","houston-parent"]+REPOS_COMPONENT
-def JOBS_CI=["houston-parent","houston-common","cosmo_kafka_serialization_CI","houston-connector-emeraude"]
-def ROLLBACK_PROJECTS=[]
 
 pipeline {
 	agent any
@@ -152,7 +152,6 @@ pipeline {
 			post {
 				failure {
 					script {
-						echo "IN DA FAILURE"
 						doRollback()
 					}
 				}

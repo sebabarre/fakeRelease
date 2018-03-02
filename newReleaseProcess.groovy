@@ -129,13 +129,7 @@ pipeline {
 			post {
 				failure {
 					script {
-						if (!params.IS_DRY_RUN) {
-							pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"houston-common", version: HOUSTON_CURRENT_VERSION, isDryRun: params.IS_DRY_RUN)
-							if (RELEASE_KAFKA_SER == true) {
-								pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"cosmo-kafka-serialization", version: KFK_CURRENT_VERSION, isDryRun: params.IS_DRY_RUN)
-								jenkinsUtils.rollbackThisProject(group: GROUP, repository:"cosmo-kafka-serialization", lastVersion: KFK_CURRENT_VERSION)
-							}
-						}
+						doRollback()
 					}
 				}
 			}

@@ -13,7 +13,7 @@ def doRollback() {
 			jenkinsUtils.rollbackThisProject(group: GROUP, repository:"cosmo-kafka-serialization", lastVersion: KFK_CURRENT_VERSION)
 		}
 		pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"houston-common", version: HOUSTON_CURRENT_VERSION, isDryRun: params.IS_DRY_RUN, forcePull: true)
-		jenkinsUtils.rollbackThoseProjects(group: GROUP, repositories:ROLLBACK_PROJECTS, lastVersion: HOUSTON_CURRENT_VERSION)
+		jenkinsUtils.rollbackThoseProjects(group: GROUP, repositories:ROLLBACK_PROJECTS, lastVersion: HOUSTON_CURRENT_VERSION, HasParentToUpdate: true)
 	}
 }
 

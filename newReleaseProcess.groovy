@@ -8,15 +8,12 @@ ROLLBACK_PROJECTS=[]
 def doRollback() {
 	echo "ENTER ROLLBACK"
 	if (!params.IS_DRY_RUN) {
-		echo "IN DA ROLLBACK"
-		pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"houston-common", version: HOUSTON_CURRENT_VERSION, isDryRun: params.IS_DRY_RUN)
-		jenkinsUtils.rollbackThoseProjects(group: GROUP, repositories:ROLLBACK_PROJECTS, lastVersion: HOUSTON_CURRENT_VERSION)
-		echo "KAFKA_CURRENT_VERSION : ${KFK_CURRENT_VERSION}"
-		echo "RELEASE_KAFKA_SER : ${RELEASE_KAFKA_SER}"
 		if (RELEASE_KAFKA_SER == true) {
-			pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"cosmo-kafka-serialization", version: KFK_CURRENT_VERSION, isDryRun: params.IS_DRY_RUN)
+			pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"cosmo-kafka-serialization", version: KFK_CURRENT_VERSION, isDryRun: params.IS_DRY_RUN, forcePull: true)
 			jenkinsUtils.rollbackThisProject(group: GROUP, repository:"cosmo-kafka-serialization", lastVersion: KFK_CURRENT_VERSION)
 		}
+		pomUtils.setArtifactVersionInDependencyManagement(group: GROUP, repository:"houston-parent", artifactId:"houston-common", version: HOUSTON_CURRENT_VERSION, isDryRun: params.IS_DRY_RUN, forcePull: true)
+		jenkinsUtils.rollbackThoseProjects(group: GROUP, repositories:ROLLBACK_PROJECTS, lastVersion: HOUSTON_CURRENT_VERSION)
 	}
 }
 

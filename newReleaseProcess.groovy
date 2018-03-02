@@ -72,6 +72,7 @@ pipeline {
 								booleanParam(name: "IS_DRY_RUN", defaultValue: true, description: "Mode dry run, c'est à dire que tout est fait en local, pour test")
 							]
 						)
+						echo params.inspect()
 					}
 				}
 			}

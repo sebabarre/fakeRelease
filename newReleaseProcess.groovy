@@ -1,6 +1,5 @@
 @Library('pipelineUtilities@FEATURE/COS-2194') _
 
-GROUP="sebastien_barre"
 def REPOS_COMPONENT=["houston-connector-pmt","houston-connector-pao"]
 def ALL_REPOS=["cosmo-kafka-serialization","houston-common","houston-parent"]+REPOS_COMPONENT
 def JOBS_CI=["houston-parent","houston-common","cosmo_kafka_serialization_CI","houston-connector-emeraude"]
@@ -24,6 +23,7 @@ pipeline {
 		maven 'maven3' 
 	}
 	environment {
+		GROUP="sebastien_barre"
 		KFK_NEXT_DEV_VERSION=""
 		HOUSTON_RELEASE_VERSION=""
 		HOUSTON_NEXT_DEV_VERSION=""

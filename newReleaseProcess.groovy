@@ -246,6 +246,23 @@ pipeline {
 				}
 			}
 		}
+
+		stage("Sonar & Checkmarx") {
+			when {
+				expression { params.IS_DRY_RUN == false }
+			}
+			steps {
+				withSonarQubeEnv('Sonar566') {
+					script {
+						try {
+							releaseUtils.sonarAndCheckmarxThoseProjects(projects: ALL_REPOS, group: GROUP)
+						} catch (Exception e) {
+							slackSend (color: '#FF0000', message: "Le stage Sonar/checkmarx est en échec - mais on s'en fout")
+						}
+					}
+				}
+			}
+		}
 		
 		stage("Réactivation de l'intégration continue") {
 			steps {

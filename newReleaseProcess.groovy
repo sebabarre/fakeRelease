@@ -1,4 +1,3 @@
-import static groovy.json.JsonOutput.*
 @Library('hesperides@1.0.3')
 @Library('pipelineUtilities@FEATURE/COS-2194') _
 
@@ -227,7 +226,7 @@ pipeline {
 						auth: AUTH,
 						workingcopyVersion: "${params.HESPERIDES_WORKING_COPY_VERSION}",
 						releaseVersion: "${params.HOUSTON_RELEASE_VERSION}",
-						nextSnapshot: "${params.HESPERIDES_WORKING_COPY_VERSION}")
+						nextSnapshot: "${params.HOUSTON_NEXT_DEV_VERSION}")
 					
 					echo prettyPrint(toJson(hesperides.setPlatformVersion(apiRootUrl: API_ROOT_URL, auth: AUTH, app:'CSM', platform:'REL1', newVersion: "${params.HOUSTON_NEXT_DEV_VERSION}")))
 					echo prettyPrint(toJson(hesperides.setPlatformModulesVersion(apiRootUrl: API_ROOT_URL, auth: AUTH, app:'CSM', platform:'REL2', newVersion: "${params.HOUSTON_RELEASE_VERSION}")))

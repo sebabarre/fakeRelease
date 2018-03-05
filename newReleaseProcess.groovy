@@ -230,9 +230,19 @@ pipeline {
 						releaseVersion: "${params.HOUSTON_RELEASE_VERSION}",
 						nextSnapshot: "${params.HOUSTON_NEXT_DEV_VERSION}")
 					
-					echo prettyPrint(toJson(hesperides.setPlatformVersion(apiRootUrl: API_ROOT_URL, auth: AUTH, app:'CSM', platform:'REL1', newVersion: "${params.HOUSTON_NEXT_DEV_VERSION}")))
-					echo prettyPrint(toJson(hesperides.setPlatformModulesVersion(apiRootUrl: API_ROOT_URL, auth: AUTH, app:'CSM', platform:'REL2', newVersion: "${params.HOUSTON_RELEASE_VERSION}")))
+					releaseUtils.setPlatformHesperidesVersion(
+						app: "CSM",
+						apiRootUrl: API_ROOT_URL,
+						auth: AUTH,
+						platform: "REL1",
+						version: "${params.HOUSTON_NEXT_DEV_VERSION}")
 
+					releaseUtils.setPlatformHesperidesVersion(
+						app: "CSM",
+						apiRootUrl: API_ROOT_URL,
+						auth: AUTH,
+						platform: "REL2",
+						version: "${params.HOUSTON_RELEASE_VERSION}")
 				}
 			}
 		}

@@ -1,4 +1,4 @@
-@Library('hesperides')
+@Library('hesperides@1.0.3')
 @Library('pipelineUtilities@FEATURE/COS-2194') _
 
 def REPOS_COMPONENT=["houston-connector-pmt","houston-connector-pao"]

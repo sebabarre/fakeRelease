@@ -198,6 +198,18 @@ pipeline {
 			}
 		}
 
+
+		stage("Merge Master -> Develop") {
+			steps {
+				script{
+					gitUtils.mergeAllProjects(group: GROUP, repositories: ALL_REPOS, branchFrom: "master", branchTo: "develop", cleanWorkspace: !params.IS_DRY_RUN)
+					if (!params.IS_DRY_RUN) {
+						gitUtils.pushAllModifications(group: GROUP, repositories: ALL_REPOS, branch: "develop")
+					}
+				}
+			}
+		}
+
 		stage("Hespérides") {
 			environment {
 				AUTH = credentials('rest_hesperides')
@@ -227,17 +239,6 @@ pipeline {
 			}
 		}
 		
-		stage("Merge Master -> Develop") {
-			steps {
-				script{
-					gitUtils.mergeAllProjects(group: GROUP, repositories: ALL_REPOS, branchFrom: "master", branchTo: "develop", cleanWorkspace: !params.IS_DRY_RUN)
-					if (!params.IS_DRY_RUN) {
-						gitUtils.pushAllModifications(group: GROUP, repositories: ALL_REPOS, branch: "develop")
-					}
-				}
-			}
-		}
-
 		stage("Réactivation de l'intégration continue") {
 			steps {
 				script {

@@ -257,7 +257,7 @@ pipeline {
 						try {
 							releaseUtils.sonarAndCheckmarxThoseProjects(projects: ALL_REPOS, group: GROUP)
 						} catch (Exception e) {
-							slackSend (color: '#FF0000', message: "Le stage Sonar/checkmarx est en échec - mais on s'en fout")
+							echo "Error lors de l'étape Sonar - checkmarx"
 						}
 					}
 				}

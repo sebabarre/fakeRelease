@@ -36,6 +36,7 @@ pipeline {
 		stage('Validation des versions') {
 			steps {
 				dir('pomParent') {
+					deleteDir()
 					script {
 						git url: "git@gitlab.socrate.vsct.fr:${GROUP}/houston-parent.git", branch: "develop"
 						def pom = readMavenPom file:'pom.xml'

@@ -217,7 +217,7 @@ pipeline {
 				API_ROOT_URL = 'https://hesperides-dev:56789/'
 			}
 			when {
-				expression { IS_DRY_RUN == false }
+				expression { params.IS_DRY_RUN == false }
 			}
 			steps {
 				script {

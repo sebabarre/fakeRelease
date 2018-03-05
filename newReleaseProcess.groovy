@@ -252,12 +252,14 @@ pipeline {
 				expression { params.IS_DRY_RUN == false }
 			}
 			steps {
-				 try {
-				 	def previousVersion=pomUtils.removeSnaphot(version: params.HESPERIDES_WORKING_COPY_VERSION)
-		            build job: 'Create_Release_Note', parameters: [string(name: 'FROM_TAG', value: previousVersion), string(name: 'TO_TAG', value: params.HOUSTON_RELEASE_VERSION)]
-		        } catch (Exception e) {
-		        	echo e.getMessage()
-		        }
+				 script {
+				 	try {
+					 	def previousVersion=pomUtils.removeSnaphot(version: params.HESPERIDES_WORKING_COPY_VERSION)
+			            build job: 'Create_Release_Note', parameters: [string(name: 'FROM_TAG', value: previousVersion), string(name: 'TO_TAG', value: params.HOUSTON_RELEASE_VERSION)]
+			        } catch (Exception e) {
+			        	echo e.getMessage()
+			        }
+			    }
 			}
 		}
 

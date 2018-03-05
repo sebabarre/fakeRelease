@@ -1,3 +1,4 @@
+import static groovy.json.JsonOutput.*
 @Library('hesperides@1.0.3')
 @Library('pipelineUtilities@FEATURE/COS-2194') _
 

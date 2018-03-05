@@ -195,6 +195,35 @@ pipeline {
 				}
 			}
 		}
+
+		stage("Hespérides") {
+			environment {
+				AUTH = credentials('rest_hesperides')
+				API_ROOT_URL = 'https://hesperides-dev:56789/'
+			}
+			steps {
+				script {
+					echo "-----------------------------------------------------------------------------------"
+					echo "Release Hesperides en ${params.HOUSTON_RELEASE_VERSION}"
+					echo "-----------------------------------------------------------------------------------"
+					echo prettyPrint(toJson(hesperides.releaseModule(apiRootUrl: API_ROOT_URL, auth: AUTH, moduleName: 'houston-connector-pao-jar', workingcopyVersion: "${params.HESPERIDES_WORKING_COPY_VERSION}", releaseVersion: "${params.HOUSTON_RELEASE_VERSION}")))
+					echo prettyPrint(toJson(hesperides.releaseModule(apiRootUrl: API_ROOT_URL, auth: AUTH, moduleName: 'houston-connector-pmt-jar', workingcopyVersion: "${params.HESPERIDES_WORKING_COPY_VERSION}", releaseVersion: "${params.HOUSTON_RELEASE_VERSION}")))
+					
+					echo "-----------------------------------------------------------------------------------"
+					echo "Création de la working copy Hesperides en ${params.HOUSTON_NEXT_DEV_VERSION}"
+					echo "-----------------------------------------------------------------------------------"
+					echo prettyPrint(toJson(hesperides.createModule(apiRootUrl: API_ROOT_URL, auth: AUTH, moduleName: 'houston-connector-pao-jar', fromModule: [name: 'houston-connector-pao-jar', version: "${params.HESPERIDES_WORKING_COPY_VERSION}", isWorkingcopy:true], version: "${params.HOUSTON_NEXT_DEV_VERSION}")))
+					echo prettyPrint(toJson(hesperides.createModule(apiRootUrl: API_ROOT_URL, auth: AUTH, moduleName: 'houston-connector-pmt-jar', fromModule: [name: 'houston-connector-pmt-jar', version: "${params.HESPERIDES_WORKING_COPY_VERSION}", isWorkingcopy:true], version: "${params.HOUSTON_NEXT_DEV_VERSION}")))
+					
+					echo "-----------------------------------------------------------------------------------"
+					echo "Montée de version des plateformes REL1 et INT1 en ${params.HOUSTON_NEXT_DEV_VERSION}"
+					echo "-----------------------------------------------------------------------------------"
+					echo prettyPrint(toJson(hesperides.setPlatformVersion(apiRootUrl: API_ROOT_URL, auth: AUTH, app:'CSM', platform:'REL1', newVersion: "${params.HOUSTON_NEXT_DEV_VERSION}")))
+					echo prettyPrint(toJson(hesperides.setPlatformModulesVersion(apiRootUrl: API_ROOT_URL, auth: AUTH, app:'CSM', platform:'REL1', newVersion: "${params.HOUSTON_NEXT_DEV_VERSION}")))
+
+				}
+			}
+		}
 		
 		stage("Merge Master -> Develop") {
 			steps {

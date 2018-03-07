@@ -1,7 +1,7 @@
 import static groovy.json.JsonOutput.*
 
 @Library('hesperides@1.0.3')
-@Library('pipelineUtilities@FIX/RELEASEV2') _
+@Library('pipelineUtilities@FEATURE/TEST') _
 
 def REPOS_COMPONENT=["houston-connector-pmt","houston-connector-pao"]
 def ALL_REPOS=["cosmo-kafka-serialization","houston-common","houston-parent"]+REPOS_COMPONENT
@@ -247,7 +247,7 @@ pipeline {
 			}
 		}
 
-		stage("Release Notes") {
+		stage("Création du CHANGELOG") {
 			when {
 				expression { params.IS_DRY_RUN == false }
 			}

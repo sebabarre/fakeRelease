@@ -1,7 +1,7 @@
 import static groovy.json.JsonOutput.*
 
 @Library('hesperides@1.0.3')
-@Library('pipelineUtilities@FEATURE/COS-2194') _
+@Library('pipelineUtilities@FIX/RELEASEV2') _
 
 def REPOS_COMPONENT=["houston-connector-pmt","houston-connector-pao"]
 def ALL_REPOS=["cosmo-kafka-serialization","houston-common","houston-parent"]+REPOS_COMPONENT

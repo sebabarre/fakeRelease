@@ -284,7 +284,11 @@ pipeline {
 		stage("Réactivation de l'intégration continue") {
 			steps {
 				script {
-					jenkinsUtils.enableJobs(jobs: JOBS_CI, pause: 1000)
+					def timeInMs = 180000
+					if (params.IS_DRY_RUN) {
+						timeInMs=1
+					}
+					jenkinsUtils.enableJobs(jobs: JOBS_CI, pause: timeInMs)
 				}
 			}
 		}

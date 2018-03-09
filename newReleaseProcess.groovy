@@ -3,7 +3,11 @@ import static groovy.json.JsonOutput.*
 @Library('hesperides@1.0.3')
 @Library('pipelineUtilities@FEATURE/TEST') _
 
-def REPOS_COMPONENT=["houston-connector-pmt","houston-connector-pao"]
+def REPOS_COMPONENT=[
+	"houston-connector-pmt",
+	"houston-connector-pao"
+	]
+	
 def ALL_REPOS=["cosmo-kafka-serialization","houston-common","houston-parent"]+REPOS_COMPONENT
 def JOBS_CI=["houston-parent","houston-common","cosmo_kafka_serialization_CI","houston-connector-emeraude"]
 ROLLBACK_PROJECTS=[]
